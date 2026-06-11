@@ -30,14 +30,32 @@ cd it-playbook
 .\scripts\run_demo.ps1
 ```
 
+### Capture a ticket (most common question)
+
+The helper **creates** ticket text and a zip — you **paste and attach** them in ServiceNow/Jira/etc.
+
+```powershell
+.\scripts\ps_troubleshooter_helper.ps1 `
+  -Action quick `
+  -TicketUser "jane.smith" `
+  -Issue "Outlook not sending" `
+  -CopyToClipboard
+```
+
+1. **Ctrl+V** into ticket Description  
+2. **Attach** the `it_diag_*.zip` path printed when the script finishes  
+3. Add screenshot + priority  
+
+See [`docs/ticket_workflow.md`](docs/ticket_workflow.md) for the full workflow. Command cheat sheet: [`docs/commands_reference.md`](docs/commands_reference.md).
+
 ### Individual scripts
 
 ```powershell
-# Safe demo — writes fictional ticket to examples\sample_ticket.txt
-.\scripts\ps_troubleshooter_helper.ps1 -Action demo -TicketUser "j.doe" -Issue "Outlook offline"
+# Practice — fictional ticket to examples\sample_ticket.txt
+.\scripts\ps_troubleshooter_helper.ps1 -Action demo -CopyToClipboard
 
-# Real diagnostics (zip under %TEMP%)
-.\scripts\ps_troubleshooter_helper.ps1 -Action quick
+# Real diagnostics (zip + ticket_draft.txt under %TEMP%)
+.\scripts\ps_troubleshooter_helper.ps1 -Action quick -TicketUser "user" -Issue "summary" -CopyToClipboard
 
 # Scan bundled sample folder (default) or any project path
 .\scripts\file_scanner.ps1

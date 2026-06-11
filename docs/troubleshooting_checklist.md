@@ -43,8 +43,12 @@ Priority: [P3 default; P2 if multi-user]
 Attach diagnostics when escalating:
 
 ```powershell
-.\scripts\ps_troubleshooter_helper.ps1 -Action quick
+.\scripts\ps_troubleshooter_helper.ps1 -Action quick -TicketUser "name" -Issue "one-line summary" -CopyToClipboard
 ```
+
+Then **paste** (Ctrl+V) into ticket Description and **attach** the printed `.zip` file.
+
+See `docs/ticket_workflow.md` for step-by-step instructions.
 
 ---
 
@@ -58,12 +62,23 @@ Attach diagnostics when escalating:
 
 ## Handy commands (elevated CMD/PowerShell)
 
+Full list with explainers: **`docs/commands_reference.md`**
+
 | Command | Purpose |
 |---------|---------|
+| `hostname` / `whoami` | PC name and logged-in user |
 | `ipconfig /all` | IP, DNS, adapter status |
-| `ping 8.8.8.8` | Basic internet reachability |
+| `ping 8.8.8.8` / `ping google.com` | Internet vs DNS |
+| `ipconfig /flushdns` | Clear stale DNS cache |
+| `nslookup google.com` | Test name resolution |
+| `tracert 8.8.8.8` | Find hop where traffic fails |
+| `netstat -ano` | Ports and process IDs |
+| `systeminfo` | OS version, patches, uptime |
+| `tasklist` / `taskkill /PID n /F` | Find/stop hung processes |
+| `net use` | Mapped drives |
 | `Test-NetConnection outlook.office365.com -Port 443` | M365 connectivity |
-| `sfc /scannow` | System file integrity (slow) |
+| `sfc /scannow` | System file integrity (slow, elevated) |
+| `DISM /Online /Cleanup-Image /RestoreHealth` | Repair Windows image (elevated) |
 
 ---
 
