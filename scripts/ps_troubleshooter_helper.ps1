@@ -115,32 +115,83 @@ function Read-MenuChoice {
     param(
         [string]$Title,
         [hashtable]$Options,
+        [hashtable]$Aliases = @{},
         [string]$DefaultKey = ''
     )
-    Write-Host ""
-    Write-Host $Title -ForegroundColor Cyan
-    foreach ($key in ($Options.Keys | Sort-Object)) {
-        Write-Host "  $key) $($Options[$key])"
+
+    $sortedKeys = $Options.Keys | Sort-Object { if ($_ -match '^\d+$') { [int]$_ } else { 999 } }, { $_ }
+
+    while ($true) {
+        Write-Host ""
+        Write-Host $Title -ForegroundColor Cyan
+        foreach ($key in $sortedKeys) {
+            Write-Host "  $key) $($Options[$key])"
+        }
+
+        if ($Aliases.Count) {
+            Write-Host "  Words accepted: $($Aliases.Keys -join ', ')" -ForegroundColor DarkGray
+        }
+
+        $defaultHint = if ($DefaultKey) { " [Enter = $DefaultKey]" } else { '' }
+        $pick = Read-Host "Type the number or word$defaultHint"
+
+        if ([string]::IsNullOrWhiteSpace($pick)) {
+            if ($DefaultKey) { return $DefaultKey }
+            Write-Host "Please enter a choice." -ForegroundColor Yellow
+            continue
+        }
+
+        $normalized = $pick.Trim().ToLower()
+
+        if ($Options.ContainsKey($normalized)) {
+            return $normalized
+        }
+
+        if ($Aliases.ContainsKey($normalized)) {
+            $mapped = $Aliases[$normalized]
+            if ($Options.ContainsKey($mapped)) { return $mapped }
+        }
+
+        foreach ($key in $Options.Keys) {
+            $label = $Options[$key].ToString().ToLower()
+            if ($label -eq $normalized -or $label.StartsWith($normalized) -or $label.Contains($normalized)) {
+                return $key
+            }
+        }
+
+        Write-Host "Not recognized: '$pick'. Type the number (e.g. 1) or a listed word (e.g. phone)." -ForegroundColor Yellow
     }
-    $pick = Read-Host "Choice$(if ($DefaultKey) { " [$DefaultKey]" })"
-    if ([string]::IsNullOrWhiteSpace($pick) -and $DefaultKey) { return $DefaultKey }
-    if ($Options.ContainsKey($pick)) { return $pick }
-    return $DefaultKey
 }
 
 function Invoke-TicketInterview {
     Write-Host ""
     Write-Host "IT Playbook - new ticket (answer a few questions)" -ForegroundColor Green
-    Write-Host "Press Enter to skip optional fields." -ForegroundColor DarkGray
+    Write-Host "Menu questions: type the NUMBER or the WORD (e.g. 1 or phone)." -ForegroundColor DarkGray
+    Write-Host "Press Enter on optional fields to skip." -ForegroundColor DarkGray
 
-    $script:Channel = Read-MenuChoice -Title 'How did the user contact you?' -Options @{
+    $channelKey = Read-MenuChoice -Title 'How did the user contact you?' -Options @{
         '1' = 'Phone'
         '2' = 'Email'
         '3' = 'Help desk ticketing system'
         '4' = 'In person'
+    } -Aliases @{
+        'phone'     = '1'
+        'p'         = '1'
+        'email'     = '2'
+        'e'         = '2'
+        'mail'      = '2'
+        'ticket'    = '3'
+        'portal'    = '3'
+        'helpdesk'  = '3'
+        'help desk' = '3'
+        'in person' = '4'
+        'in-person' = '4'
+        'person'    = '4'
+        'onsite'    = '4'
+        'on-site'   = '4'
     } -DefaultKey '3'
     $channelMap = @{ '1' = 'phone'; '2' = 'email'; '3' = 'ticket'; '4' = 'in-person' }
-    $script:Channel = $channelMap[$script:Channel]
+    $script:Channel = $channelMap[$channelKey]
 
     $script:TicketUser = Read-Host "Employee name or username (required)"
     while ([string]::IsNullOrWhiteSpace($script:TicketUser)) {
@@ -150,7 +201,7 @@ function Invoke-TicketInterview {
 
     $script:Location = Read-OptionalLine "Site / building / floor (e.g. Main office)"
 
-    $script:Category = Read-MenuChoice -Title 'Issue category' -Options @{
+    $categoryKey = Read-MenuChoice -Title 'Issue category' -Options @{
         '1'  = $CategoryLabels['network']
         '2'  = $CategoryLabels['m365']
         '3'  = $CategoryLabels['vpn']
@@ -161,24 +212,54 @@ function Invoke-TicketInterview {
         '8'  = $CategoryLabels['av-voip']
         '9'  = $CategoryLabels['hardware']
         '10' = $CategoryLabels['other']
+    } -Aliases @{
+        'network'    = '1'
+        'wifi'       = '1'
+        'wi-fi'      = '1'
+        'internet'   = '1'
+        'm365'       = '2'
+        'outlook'    = '2'
+        'teams'      = '2'
+        'vpn'        = '3'
+        'printer'    = '4'
+        'print'      = '4'
+        'onedrive'   = '5'
+        'sharepoint' = '5'
+        'account'    = '6'
+        'mfa'        = '6'
+        'password'   = '6'
+        'ad'         = '6'
+        'mobile'     = '7'
+        'av'         = '8'
+        'voip'       = '8'
+        'audio'      = '8'
+        'hardware'   = '9'
+        'other'      = '10'
     } -DefaultKey '1'
     $catMap = @{
         '1' = 'network'; '2' = 'm365'; '3' = 'vpn'; '4' = 'printer'
         '5' = 'onedrive-sharepoint'; '6' = 'account-mfa'; '7' = 'mobile'
         '8' = 'av-voip'; '9' = 'hardware'; '10' = 'other'
     }
-    $script:Category = $catMap[$script:Category]
+    $script:Category = $catMap[$categoryKey]
 
-    $script:DeviceType = Read-MenuChoice -Title 'Device type' -Options @{
+    $deviceKey = Read-MenuChoice -Title 'Device type' -Options @{
         '1' = 'Desktop'
         '2' = 'Laptop'
         '3' = 'Mobile'
         '4' = 'Printer'
         '5' = 'A/V equipment'
         '6' = 'Other'
+    } -Aliases @{
+        'desktop' = '1'
+        'laptop'  = '2'
+        'mobile'  = '3'
+        'printer' = '4'
+        'av'      = '5'
+        'other'   = '6'
     } -DefaultKey '2'
     $devMap = @{ '1' = 'desktop'; '2' = 'laptop'; '3' = 'mobile'; '4' = 'printer'; '5' = 'av'; '6' = 'other' }
-    $script:DeviceType = $devMap[$script:DeviceType]
+    $script:DeviceType = $devMap[$deviceKey]
 
     $script:Issue = Read-Host "One-line summary (e.g. No internet - websites will not load)"
     while ([string]::IsNullOrWhiteSpace($script:Issue)) {
@@ -187,9 +268,14 @@ function Invoke-TicketInterview {
 
     $script:ErrorText = Read-OptionalLine "Exact error message (if any)"
 
-    $onSite = Read-MenuChoice -Title 'Are you at the user''s computer right now?' -Options @{
+    $onSite = Read-MenuChoice -Title 'Are you at the user computer right now?' -Options @{
         'y' = 'Yes - collect diagnostics from this PC'
         'n' = 'No - I am at my desk / on the phone'
+    } -Aliases @{
+        'yes' = 'y'
+        'y'   = 'y'
+        'no'  = 'n'
+        'n'   = 'n'
     } -DefaultKey 'n'
     if ($onSite -eq 'y') {
         $script:Action = 'quick'
@@ -205,14 +291,19 @@ function Invoke-TicketInterview {
         $script:StepsTried = Read-OptionalLine "Steps already tried (reboot, MFA, etc.)"
     }
 
-    $script:Priority = Read-MenuChoice -Title 'Suggested priority' -Options @{
+    $priorityKey = Read-MenuChoice -Title 'Suggested priority' -Options @{
         '1' = 'Low - single user, workaround exists'
         '2' = 'Normal - single user, no workaround'
         '3' = 'High - multiple users or key role blocked'
         '4' = 'Urgent - outage / security'
+    } -Aliases @{
+        'low'    = '1'
+        'normal' = '2'
+        'high'   = '3'
+        'urgent' = '4'
     } -DefaultKey '2'
     $priMap = @{ '1' = 'low'; '2' = 'normal'; '3' = 'high'; '4' = 'urgent' }
-    $script:Priority = $priMap[$script:Priority]
+    $script:Priority = $priMap[$priorityKey]
 }
 
 function Get-ShouldInterview {
