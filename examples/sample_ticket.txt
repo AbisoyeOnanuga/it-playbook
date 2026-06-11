@@ -1,0 +1,24 @@
+﻿TICKET SUMMARY (auto-generated)
+-------------------------------
+User/issue : j.doe - Outlook stuck in offline mode
+Hostname   : DEMO-LTP-042
+OS         : Windows 11 Pro 23H2 (sample)
+Collected  : 2026-06-10 20:29:33
+
+Network
+Adapter: Wi-Fi | Status: Up | IPv4: 192.0.2.10 (RFC5737 demo)
+
+OneDrive
+OneDrive process: running (demo)
+
+Steps already tried (from playbook)
+- Reboot confirmed / pending
+- Network connectivity checked
+- MFA / credential refresh attempted if applicable
+
+Attach
+- Diagnostics zip (if collected)
+- Screenshot of exact error text
+
+Escalation
+- Tag Level 2 with reproduction steps and priority.
