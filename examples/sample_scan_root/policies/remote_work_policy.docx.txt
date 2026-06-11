@@ -1,0 +1,3 @@
+﻿Lorem ipsum policy draft. Not a real document.
+Version 2.1 — internal use only (fictional Acme Corp).
+Last reviewed: 2025-11-01
