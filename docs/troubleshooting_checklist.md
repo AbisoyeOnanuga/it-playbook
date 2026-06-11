@@ -4,6 +4,21 @@ Print this page for frontline staff. All examples use fictional users and RFC 57
 
 ---
 
+## Log the ticket (every incident)
+
+```powershell
+cd path\to\it-playbook
+.\scripts\new_ticket.ps1
+```
+
+1. Answer prompts (channel, user, location, category, issue).
+2. **Ctrl+V** into help desk ticket.
+3. File saved in `tickets\` — attach user screenshot or on-site zip if collected.
+
+Full steps: `playbook.md`
+
+---
+
 ## 60-second triage
 
 | Step | Action | Pass? |
@@ -40,15 +55,21 @@ When:     [date/time, timezone]
 Priority: [P3 default; P2 if multi-user]
 ```
 
-Attach diagnostics when escalating:
+**From your desk (email/chat ticket):**
 
 ```powershell
-.\scripts\ps_troubleshooter_helper.ps1 -Action quick -TicketUser "name" -Issue "one-line summary" -CopyToClipboard
+.\scripts\ps_troubleshooter_helper.ps1 -Action draft -TicketUser "name" -Issue "summary" -ReportedHostname "USER-PC" -CopyToClipboard
 ```
 
-Then **paste** (Ctrl+V) into ticket Description and **attach** the printed `.zip` file.
+**On the user's PC only** (visit / remote):
 
-See `docs/ticket_workflow.md` for step-by-step instructions.
+```powershell
+.\scripts\ps_troubleshooter_helper.ps1 -Action quick -TicketUser "name" -Issue "summary" -CopyToClipboard
+```
+
+Do **not** use `-Action quick` on your own PC for someone else's ticket.
+
+See `docs/ticket_workflow.md` for all three scenarios.
 
 ---
 

@@ -1,105 +1,72 @@
 # IT Troubleshooting Playbook & Tools
 
-**Practical playbook, PowerShell helpers, and sanitized examples for first-contact Windows and Microsoft 365 troubleshooting.**
+**First-contact IT support** — help desk ticketing, phone, email, and in-person. Windows 11 Pro, Microsoft 365, VPN, Wi-Fi, printers, SharePoint/OneDrive.
 
 [![Demo GIF](demo/demo.gif)](demo/demo.gif)
 
-Turn a one-page service desk checklist into **runnable artifacts**: diagnostic collection, ticket-ready summaries, and a folder inventory with CSV + HTML reporting — all using fictional demo data safe to share on GitHub.
+---
 
-## What's inside
-
-| Path | Purpose |
-|------|---------|
-| [`playbook.md`](playbook.md) | Concise first-contact troubleshooting guide |
-| [`docs/troubleshooting_checklist.md`](docs/troubleshooting_checklist.md) | Printable checklist for frontline staff |
-| [`docs/onboarding_prototype.md`](docs/onboarding_prototype.md) | Sample onboarding runbook (fictional Acme Corp) |
-| [`scripts/ps_troubleshooter_helper.ps1`](scripts/ps_troubleshooter_helper.ps1) | Collect diagnostics + draft escalation text |
-| [`scripts/file_scanner.ps1`](scripts/file_scanner.ps1) | Scan a project tree → CSV + HTML visualization |
-| [`scripts/run_demo.ps1`](scripts/run_demo.ps1) | One-command demo workflow |
-| [`examples/`](examples/) | Sanitized sample tree, pre-built reports, ticket draft |
-
-## Quick start
-
-Requires **Windows PowerShell 5.1+** or **PowerShell 7+**. No admin needed for demo mode.
+## How to use (3 steps)
 
 ```powershell
 git clone https://github.com/AbisoyeOnanuga/it-playbook.git
 cd it-playbook
-
-# Full demo: sample ticket + file scan + open HTML report
-.\scripts\run_demo.ps1
+.\scripts\new_ticket.ps1
 ```
 
-### Capture a ticket (most common question)
+1. **Answer the prompts** (contact channel, user name, location, issue, on-site y/n, priority).
+2. **Ctrl+V** into your help desk ticket — text is copied to clipboard automatically.
+3. **Edit if needed** — Notepad opens; a copy is saved in `tickets\` (e.g. `tickets\2026-06-11_1151_jane-smith_no-internet.txt`).
 
-The helper **creates** ticket text and a zip — you **paste and attach** them in ServiceNow/Jira/etc.
+No parameters. No hunting in `%TEMP%`.
 
-```powershell
-.\scripts\ps_troubleshooter_helper.ps1 `
-  -Action quick `
-  -TicketUser "jane.smith" `
-  -Issue "Outlook not sending" `
-  -CopyToClipboard
-```
+| If you are... | Say at prompt | Result |
+|---------------|---------------|--------|
+| Phone / email / ticket portal from **your desk** | Not on user's PC | Ticket from **user-reported** facts — your PC is **not** scanned |
+| **In person** at user's computer | Yes, on user's PC | Diagnostics zip from **their** machine → `tickets\diag_*.zip` |
 
-1. **Ctrl+V** into ticket Description  
-2. **Attach** the `it_diag_*.zip` path printed when the script finishes  
-3. Add screenshot + priority  
+Step-by-step walkthroughs: [`playbook.md`](playbook.md) · [`docs/coordinator_workflow.md`](docs/coordinator_workflow.md)
 
-See [`docs/ticket_workflow.md`](docs/ticket_workflow.md) for the full workflow. Command cheat sheet: [`docs/commands_reference.md`](docs/commands_reference.md).
+---
 
-### Individual scripts
-
-```powershell
-# Practice — fictional ticket to examples\sample_ticket.txt
-.\scripts\ps_troubleshooter_helper.ps1 -Action demo -CopyToClipboard
-
-# Real diagnostics (zip + ticket_draft.txt under %TEMP%)
-.\scripts\ps_troubleshooter_helper.ps1 -Action quick -TicketUser "user" -Issue "summary" -CopyToClipboard
-
-# Scan bundled sample folder (default) or any project path
-.\scripts\file_scanner.ps1
-.\scripts\file_scanner.ps1 -Root "D:\Projects\SomeShare" -OutCsv ".\out\scan.csv"
-```
-
-Open [`examples/demo_visualization.html`](examples/demo_visualization.html) in a browser to view the asset map.
-
-## Demo workflow
-
-1. **Triage** — follow [`playbook.md`](playbook.md) or the printable checklist.
-2. **Capture** — run the troubleshooter (`quick` or `demo`).
-3. **Inventory** — run `file_scanner.ps1` when cleaning shared drives or project folders.
-4. **Escalate** — attach zip + ticket draft; tag Level 2 with repro steps.
-
-Regenerate the README GIF (optional):
-
-```powershell
-python scripts/generate_demo_gif.py
-```
-
-## Why this exists
-
-- Standardizes first-contact checks so tickets arrive complete at Level 2.
-- Shows practical IT coordination skills: documentation, scripting, and safe handling of user data.
-- Every example uses **fictional users, hostnames, and RFC 5737 demo IPs** — no real org data.
-
-## Project structure
+## Example session (desk / phone)
 
 ```
-it-playbook/
-├── playbook.md
-├── docs/
-├── scripts/
-├── examples/sample_scan_root/   # synthetic files only
-├── examples/demo_report.csv
-├── examples/demo_visualization.html
-└── demo/demo.gif
+> .\scripts\new_ticket.ps1
+
+Contact channel: 1 Phone  2 Email  3 Ticketing system  4 In person
+Choice [3]: 1
+
+Employee name: jane.smith
+Site / building: Main office
+Issue category: 1 Network / Wi-Fi
+Device type: 2 Laptop
+Issue summary: No internet - websites will not load
+On user's PC now? y / n [n]: n
+User PC hostname: LAPTOP-JSMITH
+Symptoms: ping 8.8.8.8 fails; Wi-Fi shows connected
+
+READY FOR TICKETING SYSTEM
+  1. Ctrl+V in your help desk ticket
+  2. Saved copy: tickets\2026-06-11_1151_jane-smith_no-internet.txt
 ```
+
+---
+
+## What's in the repo
+
+| Path | Use |
+|------|-----|
+| [`scripts/new_ticket.ps1`](scripts/new_ticket.ps1) | **Run this** — interactive new ticket |
+| [`playbook.md`](playbook.md) | Full how-to + walkthroughs |
+| [`docs/coordinator_workflow.md`](docs/coordinator_workflow.md) | IT Coordinator duties → workflow |
+| [`docs/commands_reference.md`](docs/commands_reference.md) | `ipconfig`, `ping`, `nslookup`, … |
+| [`scripts/user_collect_diagnostics.ps1`](scripts/user_collect_diagnostics.ps1) | Send to user — they email zip back |
+
+Regenerate demo GIF: `python scripts/generate_demo_gif.py`
+
+---
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
-## Resume blurb
-
-> **IT Troubleshooting Playbook** — Documented Windows/M365 first-contact procedures and shipped PowerShell tooling to collect diagnostics, draft escalation-ready tickets, and visualize folder inventories (CSV + HTML). Includes sanitized demo data, printable checklists, and a one-command demo script for interviews and portfolio review.
