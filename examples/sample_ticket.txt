@@ -3,7 +3,7 @@
 User/issue : j.doe - Outlook stuck in offline mode
 Hostname   : DEMO-LTP-042
 OS         : Windows 11 Pro 23H2 (sample)
-Collected  : 2026-06-10 20:29:33
+Collected  : 2026-06-11 09:31:27
 
 Network
 Adapter: Wi-Fi | Status: Up | IPv4: 192.0.2.10 (RFC5737 demo)
