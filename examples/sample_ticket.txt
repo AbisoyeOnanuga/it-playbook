@@ -1,9 +1,9 @@
 ﻿TICKET SUMMARY (auto-generated)
 -------------------------------
-User/issue : jane.smith - Cannot reach printer
+User/issue : mister.x - Printer shows offline when connecting via WiFi
 Hostname   : DEMO-LTP-042
 OS         : Windows 11 Pro 23H2 (sample)
-Collected  : 2026-06-11 10:21:18
+Collected  : 2026-06-11 11:09:29
 
 Network
 Adapter: Wi-Fi | Status: Up | IPv4: 192.0.2.10 (RFC5737 demo)
