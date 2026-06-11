@@ -10,11 +10,12 @@ cd path\to\it-playbook
 | Step | Action |
 |------|--------|
 | 1 | Run `new_ticket.ps1` |
-| 2 | Answer prompts (channel, name, location, category, device, issue) |
-| 3 | **On user's PC now?** `n` from desk/phone · `y` only at their keyboard |
-| 4 | **Ctrl+V** into help desk ticket (clipboard filled automatically) |
-| 5 | Edit in Notepad if needed; file also in `tickets\` |
-| 6 | Attach user screenshot; if on-site collect, attach `tickets\diag_*.zip` |
+| 2 | **Menus:** type number (`1`) or word (`phone`). **Enter** = default. Invalid input re-prompts. |
+| 3 | **Text fields:** type answer and Enter (name, location, issue summary) |
+| 4 | **On user's PC now?** `n` from desk/phone · `y` only at their keyboard |
+| 5 | **Ctrl+V** into help desk ticket (clipboard filled automatically) |
+| 6 | Edit in Notepad if needed; file also in `tickets\` |
+| 7 | Attach user screenshot; if on-site collect, attach `tickets\diag_*.zip` |
 
 See [`playbook.md`](../playbook.md) for full walkthroughs (phone call, in-person).
 

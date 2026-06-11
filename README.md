@@ -15,6 +15,9 @@ cd it-playbook
 ```
 
 1. **Answer the prompts** (contact channel, user name, location, issue, on-site y/n, priority).
+   - **Menus:** type the **number** (`1`) **or** the **word** (`phone`) — not the full line `1) Phone`.
+   - **Enter alone** = accept the default shown in brackets.
+   - Wrong answer? Script re-asks; it won't silently pick the wrong option.
 2. **Ctrl+V** into your help desk ticket — text is copied to clipboard automatically.
 3. **Edit if needed** — Notepad opens; a copy is saved in `tickets\` (e.g. `tickets\2026-06-11_1151_jane-smith_no-internet.txt`).
 
@@ -35,7 +38,9 @@ Step-by-step walkthroughs: [`playbook.md`](playbook.md) · [`docs/coordinator_wo
 > .\scripts\new_ticket.ps1
 
 Contact channel: 1 Phone  2 Email  3 Ticketing system  4 In person
-Choice [3]: 1
+  Words accepted: phone, email, ticket, in person, ...
+Type the number or word [Enter = 3]: phone
+```
 
 Employee name: jane.smith
 Site / building: Main office

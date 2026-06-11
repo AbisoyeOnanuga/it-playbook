@@ -20,20 +20,19 @@ cd D:\Documents\vscode\it-playbook
 
 ### Step 3 — Answer the prompts
 
-The script walks you through each field. Press **Enter** to skip optional items.
+**Menu questions:** type the **number** or the **word** shown. Both work. Press **Enter** alone to accept the `[default]`.
 
-| Prompt | What to enter | Example |
-|--------|---------------|---------|
-| Contact channel | `1` Phone, `2` Email, `3` Ticketing system, `4` In person | `3` |
-| Employee name | Who is having the issue | `jane.smith` |
-| Site / location | Building or office (optional) | `Main office` |
-| Issue category | `1`–`10` (network, M365, VPN, printer, …) | `1` for network |
-| Device type | Desktop, laptop, mobile, printer, A/V | `2` laptop |
-| Issue summary | One line for the ticket title | `No internet - websites will not load` |
-| Error message | Exact text user sees (optional) | `Chrome: No internet` |
-| On user's PC now? | `y` only if you are at **their** keyboard | `n` from your desk |
-| If `n` (desk/phone) | Hostname, Windows version, symptoms they report | `LAPTOP-JS`, `ping fails` |
-| Priority | `1` low → `4` urgent | `2` normal |
+| Question | Valid answers (examples) |
+|----------|--------------------------|
+| Contact channel | `1` or `phone` · `2` or `email` · `3` or `ticket` · `4` or `in-person` |
+| Issue category | `1` or `network` · `2` or `m365` · `4` or `printer` · `10` or `other` (see full list below) |
+| Device type | `1` or `desktop` · `2` or `laptop` · `3` or `mobile` · … |
+| On user's PC now? | `y` or `yes` · `n` or `no` |
+| Priority | `1` or `low` · `2` or `normal` · `3` or `high` · `4` or `urgent` |
+
+If you mistype, the script asks again — it does **not** silently pick the wrong option.
+
+**Text questions** (name, location, issue summary): type normally and press Enter.
 
 ### Step 4 — Paste into your ticketing system
 
