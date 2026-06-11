@@ -1,30 +1,87 @@
-# IT Troubleshooting Playbook and Tools
+# IT Troubleshooting Playbook & Tools
 
-**One line:** Practical playbook, scripts, and examples for first‑contact Windows and Microsoft 365 troubleshooting.
+**Practical playbook, PowerShell helpers, and sanitized examples for first-contact Windows and Microsoft 365 troubleshooting.**
 
-## Purpose
-This repo turns a one‑page troubleshooting playbook into runnable artifacts you can use on a laptop to reproduce common fixes, capture diagnostics, and standardize ticket content for escalation.
+[![Demo GIF](demo/demo.gif)](demo/demo.gif)
 
-## Contents
-- `playbook.md` — concise troubleshooting checklist and escalation steps.
-- `scripts/ps_troubleshoot_helper.ps1` — PowerShell helper for quick diagnostics and log collection.
-- `scripts/scan_assets.py` — small Python script to scan a project folder and produce a CSV report and simple HTML visualization.
-- `docs/troubleshooting_checklist.pdf` — printable one‑page checklist for frontline staff.
-- `demo/demo.gif` — short demo showing the workflow.
+Turn a one-page service desk checklist into **runnable artifacts**: diagnostic collection, ticket-ready summaries, and a folder inventory with CSV + HTML reporting — all using fictional demo data safe to share on GitHub.
 
-## How to use
-1. Clone the repo.
-2. For PowerShell helper: run `.\scripts\ps_troubleshoot_helper.ps1 -Action quick` in an elevated PowerShell window.
-3. For asset scan: `python3 scripts/scan_assets.py --root "C:\path\to\project" --out examples/demo_report.csv`
-4. Open `examples/demo_visualization.html` to view the asset map.
+## What's inside
 
-## Why this is useful
-- Speeds first‑contact resolution by standardizing checks.
-- Produces consistent ticket content for Level 2 escalation.
-- Demonstrates practical scripting and documentation skills relevant to IT Coordinator duties.
+| Path | Purpose |
+|------|---------|
+| [`playbook.md`](playbook.md) | Concise first-contact troubleshooting guide |
+| [`docs/troubleshooting_checklist.md`](docs/troubleshooting_checklist.md) | Printable checklist for frontline staff |
+| [`docs/onboarding_prototype.md`](docs/onboarding_prototype.md) | Sample onboarding runbook (fictional Acme Corp) |
+| [`scripts/ps_troubleshooter_helper.ps1`](scripts/ps_troubleshooter_helper.ps1) | Collect diagnostics + draft escalation text |
+| [`scripts/file_scanner.ps1`](scripts/file_scanner.ps1) | Scan a project tree → CSV + HTML visualization |
+| [`scripts/run_demo.ps1`](scripts/run_demo.ps1) | One-command demo workflow |
+| [`examples/`](examples/) | Sanitized sample tree, pre-built reports, ticket draft |
 
-## Demo
-See `demo/demo.gif` for a 60–90 second walkthrough.
+## Quick start
+
+Requires **Windows PowerShell 5.1+** or **PowerShell 7+**. No admin needed for demo mode.
+
+```powershell
+git clone https://github.com/AbisoyeOnanuga/it-playbook.git
+cd it-playbook
+
+# Full demo: sample ticket + file scan + open HTML report
+.\scripts\run_demo.ps1
+```
+
+### Individual scripts
+
+```powershell
+# Safe demo — writes fictional ticket to examples\sample_ticket.txt
+.\scripts\ps_troubleshooter_helper.ps1 -Action demo -TicketUser "j.doe" -Issue "Outlook offline"
+
+# Real diagnostics (zip under %TEMP%)
+.\scripts\ps_troubleshooter_helper.ps1 -Action quick
+
+# Scan bundled sample folder (default) or any project path
+.\scripts\file_scanner.ps1
+.\scripts\file_scanner.ps1 -Root "D:\Projects\SomeShare" -OutCsv ".\out\scan.csv"
+```
+
+Open [`examples/demo_visualization.html`](examples/demo_visualization.html) in a browser to view the asset map.
+
+## Demo workflow
+
+1. **Triage** — follow [`playbook.md`](playbook.md) or the printable checklist.
+2. **Capture** — run the troubleshooter (`quick` or `demo`).
+3. **Inventory** — run `file_scanner.ps1` when cleaning shared drives or project folders.
+4. **Escalate** — attach zip + ticket draft; tag Level 2 with repro steps.
+
+Regenerate the README GIF (optional):
+
+```powershell
+python scripts/generate_demo_gif.py
+```
+
+## Why this exists
+
+- Standardizes first-contact checks so tickets arrive complete at Level 2.
+- Shows practical IT coordination skills: documentation, scripting, and safe handling of user data.
+- Every example uses **fictional users, hostnames, and RFC 5737 demo IPs** — no real org data.
+
+## Project structure
+
+```
+it-playbook/
+├── playbook.md
+├── docs/
+├── scripts/
+├── examples/sample_scan_root/   # synthetic files only
+├── examples/demo_report.csv
+├── examples/demo_visualization.html
+└── demo/demo.gif
+```
 
 ## License
-MIT
+
+MIT — see [LICENSE](LICENSE).
+
+## Resume blurb
+
+> **IT Troubleshooting Playbook** — Documented Windows/M365 first-contact procedures and shipped PowerShell tooling to collect diagnostics, draft escalation-ready tickets, and visualize folder inventories (CSV + HTML). Includes sanitized demo data, printable checklists, and a one-command demo script for interviews and portfolio review.
